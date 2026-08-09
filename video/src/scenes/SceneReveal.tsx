@@ -1,31 +1,19 @@
 import React from 'react';
-import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {ROBOT_NAME, TAGLINE} from '../config';
-import {Emotion, Robot} from '../Robot';
 import {Caption, DIM, INK, SANS, Stage, YELLOW} from '../ui';
 
-// Scene 4 · 0:27–0:40 — the reveal: eyes open, pull back to full robot.
+// Scene 4 · 0:27–0:40 — the reveal: the real robot, photo-first.
 export const SceneReveal: React.FC<{duration: number}> = ({duration}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
 
-  // Start zoomed hard onto the face, pull back to full body.
-  const pullBack = spring({
-    frame: frame - 40,
-    fps,
-    config: {damping: 200},
-    durationInFrames: 70,
-  });
-  const scale = interpolate(pullBack, [0, 1], [3.4, 1.05]);
-  const ty = interpolate(pullBack, [0, 1], [340, 0]);
+  const cardIn = spring({frame: frame - 8, fps, config: {damping: 16}, durationInFrames: 45});
+  // slow push-in on the photo for life
+  const zoom = interpolate(frame, [0, duration], [1, 1.07]);
 
-  // Emotion cycle after the pull-back, from the spec sheet.
-  const emotions: Emotion[] = ['happy', 'excited', 'surprised', 'cheering'];
-  const emotion =
-    frame < 130 ? 'happy' : emotions[Math.floor((frame - 130) / 55) % emotions.length];
-
-  const nameIn = spring({frame: frame - 150, fps, config: {damping: 14}});
-  const tagIn = interpolate(frame, [185, 205], [0, 1], {
+  const nameIn = spring({frame: frame - 165, fps, config: {damping: 14}});
+  const tagIn = interpolate(frame, [200, 220], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -38,21 +26,40 @@ export const SceneReveal: React.FC<{duration: number}> = ({duration}) => {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse at 50% 62%, rgba(224,164,34,0.14) 0%, transparent 55%)',
+            'radial-gradient(ellipse at 50% 55%, rgba(224,164,34,0.16) 0%, transparent 55%)',
         }}
       />
+      {/* the real robot, on a photo card */}
       <div
         style={{
-          transform: `translateY(${ty - 40}px) scale(${scale})`,
+          transform: `translateY(${interpolate(cardIn, [0, 1], [80, -30])}px) scale(${
+            0.7 + cardIn * 0.3
+          })`,
+          opacity: Math.min(1, cardIn * 1.4),
         }}
       >
-        <Robot emotion={emotion} />
+        <div
+          style={{
+            borderRadius: 26,
+            overflow: 'hidden',
+            boxShadow: '0 30px 90px rgba(0,0,0,0.6), 0 0 0 10px rgba(255,255,255,0.05)',
+          }}
+        >
+          <Img
+            src={staticFile('photo-hero.jpg')}
+            style={{
+              height: 780,
+              display: 'block',
+              transform: `scale(${zoom})`,
+            }}
+          />
+        </div>
       </div>
       {/* name lockup */}
       <div
         style={{
           position: 'absolute',
-          bottom: 110,
+          bottom: 60,
           width: '100%',
           textAlign: 'center',
           transform: `scale(${Math.max(0, nameIn)})`,
@@ -83,9 +90,9 @@ export const SceneReveal: React.FC<{duration: number}> = ({duration}) => {
         </span>
       </div>
       <Caption
-        appearAt={55}
-        disappearAt={138}
-        bottom={70}
+        appearAt={30}
+        disappearAt={155}
+        bottom={60}
         text={`That's why we built ${ROBOT_NAME} — a four-foot companion with a phone for a face, wheels under its feet, and one job: to be there.`}
       />
       {/* corner detail label, spec-sheet style */}
@@ -99,7 +106,7 @@ export const SceneReveal: React.FC<{duration: number}> = ({duration}) => {
           letterSpacing: '0.28em',
           textTransform: 'uppercase',
           color: DIM,
-          opacity: interpolate(frame, [120, 140], [0, 1], {
+          opacity: interpolate(frame, [60, 80], [0, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
           }),

@@ -113,7 +113,7 @@ export const SceneGames: React.FC<{duration: number}> = ({duration}) => {
       </div>
       <Caption
         appearAt={16}
-        text="So we got creative. Whole friendships lived inside tiny crewmates on a screen. We played our way through it — together, apart."
+        text="So we got creative. Whole friendships lived inside tiny crewmates on a screen. We played through it — together, apart."
       />
     </Stage>
   );

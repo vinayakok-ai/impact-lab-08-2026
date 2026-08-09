@@ -1,5 +1,5 @@
 import React from 'react';
-import {Composition, Sequence} from 'remotion';
+import {Audio, Composition, Sequence, staticFile} from 'remotion';
 import {FPS, SCENES, TOTAL_FRAMES} from './config';
 import {SceneClose} from './scenes/SceneClose';
 import {SceneGames} from './scenes/SceneGames';
@@ -8,8 +8,22 @@ import {SceneReveal} from './scenes/SceneReveal';
 import {SceneTurn} from './scenes/SceneTurn';
 import {SceneWorld} from './scenes/SceneWorld';
 
+const VO: Record<keyof typeof SCENES, string> = {
+  world: 'vo-world.mp3',
+  games: 'vo-games.mp3',
+  turn: 'vo-turn.mp3',
+  reveal: 'vo-reveal.mp3',
+  montage: 'vo-montage.mp3',
+  close: 'vo-close.mp3',
+};
+
 const Video: React.FC = () => (
   <>
+    {(Object.keys(SCENES) as (keyof typeof SCENES)[]).map((key) => (
+      <Sequence key={`vo-${key}`} from={SCENES[key].from} durationInFrames={SCENES[key].duration}>
+        <Audio src={staticFile(VO[key])} />
+      </Sequence>
+    ))}
     <Sequence from={SCENES.world.from} durationInFrames={SCENES.world.duration}>
       <SceneWorld duration={SCENES.world.duration} />
     </Sequence>

@@ -85,7 +85,7 @@ export const SceneTurn: React.FC<{duration: number}> = ({duration}) => {
       </div>
       <Caption
         appearAt={14}
-        text="Then the world reopened… for most of us. For millions, that isolation was never a lockdown. It's just — every day."
+        text="Then the world reopened — for most of us. For millions with limited mobility, that isolation was never a lockdown. It's every day."
       />
     </Stage>
   );
