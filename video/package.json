@@ -1,0 +1,19 @@
+{
+  "name": "video",
+  "version": "1.0.0",
+  "description": "Impact Lab 60s marketing video (Remotion)",
+  "main": "index.js",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts ImpactLabVideo out/video.mp4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@remotion/cli": "^4.0.507",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "remotion": "^4.0.507"
+  }
+}
